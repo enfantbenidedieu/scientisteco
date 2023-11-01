@@ -22,6 +22,18 @@ def fviz_consumption(self,
     p = (gg.ggplot(data,gg.aes(x="x",y="y"))+gg.geom_line(color=color)+
             gg.geom_hline(yintercept = 0)+gg.geom_vline(xintercept = 0))
     
+    # Fill between
+    p = p + gg.geom_ribbon(gg.aes(ymin = 0, ymax = bound2,where = "x<y"),fill = "blue", alpha = 0.4)
+
+    # Add Text
+    p = p + gg.annotate("text",x=self.optimo_[0]-0.5,y=self.optimo_[1]+0.5,label="(%s, %s)"%(round(self.optimo_[0],2),round(self.optimo_[1],2)))
+    
+    # Add Line for Optimal point
+    p = p + gg.geom_segment(gg.aes(x=[self.optimo_[0],0],y=[0,self.optimo_[1]],xend=[self.optimo_[0],self.optimo_[0]],yend=[self.optimo_[1],self.optimo_[1]]),linetype= "dashed")
+
+    # Add text
+    
+    
     if xlabel is None:
         xlabel = "Good 1"
     if ylabel is None:
