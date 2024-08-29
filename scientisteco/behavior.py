@@ -28,12 +28,23 @@ from sklearn.base import BaseEstimator, TransformerMixin
 class CONSUMPTION(BaseEstimator,TransformerMixin):
     """
     Consumption analysis
+    --------------------
+    This class inherits from sklearn BaseEstimator and TransformerMixin class
 
+    Description
+    -----------
     This function performs consumption analysis used in case of microeconomics analysis.
 
-    Parameters:
+    Usage
+    -----
+    ```
+    >>> 
+    ```
+
+    Parameters
     -----------
     u :
+
     R :
     p1 :
     p2 :
@@ -41,8 +52,8 @@ class CONSUMPTION(BaseEstimator,TransformerMixin):
     new_p2 :
     new_R :
 
-    Returns:
-    -------
+    Attributes
+    ----------
     
     
     

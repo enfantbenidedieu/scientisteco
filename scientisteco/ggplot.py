@@ -4,17 +4,39 @@ import numpy as np
 import pandas as pd
 import plotnine as gg
 
-
 def fviz_consumption(self,
-                     xlabel = "Good 1",
-                     ylabel = "Good 2",
+                     x_label = "Good 1",
+                     y_label = "Good 2",
                      title = "Flexible Demand Systems",
                      color="blue",
-                     theme=gg.theme_classic()):
+                     theme=gg.theme_minimal()) -> gg:
+    """
+    Visualize consumption function
+    ------------------------------
+
+    Usage
+    -----
+    ```
+    >>>
+    ```
+
+    Parameters
+    ----------
+    `self` : an object of class CONSUMPTION
+
+    `x_label` : a string
+
+    `y_label` : a string
+    
+    
+    Author(s)
+    ---------
+    Duvérier DJIFACK ZEBAZE djifacklab@gmail.com
+    """
     
 
     if self.model_ != "consumption":
-        raise ValueError("Error : 'self' must be an object of class CONSUMPTION.")
+        raise ValueError("'self' must be an object of class CONSUMPTION.")
     
 
     bound1, bound2 = self.R/self.p1, self.R/self.p2
@@ -36,14 +58,14 @@ def fviz_consumption(self,
     # Add text
     
     
-    if xlabel is None:
-        xlabel = "Good 1"
-    if ylabel is None:
-        ylabel = "Good 2"
+    if x_label is None:
+        x_label = "Good 1"
+    if y_label is None:
+        y_label = "Good 2"
     if title is None:
         title = "Flexible Demand Systems"
     
-    p = p + gg.labs(x=xlabel,y=ylabel,title=title)
+    p = p + gg.labs(x=x_label,y=y_label,title=title)
 
     # Add theme
     p = p + theme
