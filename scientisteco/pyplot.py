@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from scipy import optimize as optim
 
 def plotCONS(self,
              xlabel="Good 1",
@@ -11,7 +12,7 @@ def plotCONS(self,
              xlim=None,
              ylim=(0,300),
              addgrid=True,
-             ax=None):
+             ax=None) -> plt:
     
     if ax is None:
         ax = plt.gca()
@@ -110,3 +111,89 @@ def plotCONS(self,
     ax.grid(visible=addgrid)
     ax.set(xlabel=xlabel,ylabel=ylabel,title=title,xlim=xlim,ylim=ylim)
 
+
+
+
+
+############################################################################################
+#       DUOPOLY
+############################################################################################
+    
+def plotDUOPOLE(self,
+                xlim = (0,120),
+                ylim = (0,120),
+                xlabel = None,
+                ylabel = None,
+                title  = None,
+                point_size=100,
+                color1 = "blue",
+                color2 = "red",
+                label1 = "Firm 1's Reaction Curve",
+                label2 = "Firm 2's Reaction Curve",
+                delta = 0.5,
+                add_grid = True,
+                ax=None) -> plt:
+    """
+    
+    """
+
+    if self.model_ != "duopole":
+        raise ValueError("Error : ")
+
+    if ax is None:
+        ax = plt.gca()
+
+    # Firm 1 profit
+    profit1 = lambda x1, x2 : self.demand(x1,x2)*x1 - self.cost1(x1)
+    # Firm 2 profit
+    profit2 = lambda x1, x2 : self.demand(x1,x2)*x2 - self.cost2(x2)
+
+    if self.method == "cournot":
+
+        def reaction1(x2):
+            x1 = optim.brute(lambda x: -profit1(x,x2),((0,1,),))                                          
+            return x1[0]
+
+        def reaction2(x1):
+            x2 = optim.brute(lambda x: -profit2(x1,x),((0,1,),))                                                   
+            return x2[0]
+        
+        # Firm 1' reactive curve
+        x2 = np.linspace(ylim[0],ylim[1])
+        xx = np.array([reaction1(x) for x in x2])
+        # Firm 2 reactive curve
+        x1 = np.linspace(xlim[0],xlim[1])
+        yy = np.array([reaction2(x) for x in x1])
+
+        ax.plot(xx,x2,color=color1,label=label1+" ("+r"$\hat{\pi}_{1}$ = "+str(round(self.profit_["profit1"],2))+")")
+        ax.plot(x1,yy,color=color2,label=label2+" ("+r"$\hat{\pi}_{2}$ = "+str(round(self.profit_["profit2"],2))+")")
+        ax.plot([0,self.optimo_["x1"]],[self.optimo_["x2"],self.optimo_["x2"]],linestyle="--",color="red")
+        ax.plot([self.optimo_["x1"],self.optimo_["x1"]],[0,self.optimo_["x2"]],linestyle="--",color="blue")
+        ax.scatter(x=self.optimo_["x1"],y=self.optimo_["x2"],color="black",s=point_size,marker="o",label="Cournot Equilibrium point")
+        ax.text(x=self.optimo_["x1"]+delta,y=self.optimo_["x2"]+delta,
+                s="("+str(round(self.optimo_["x1"],2))+","+str(round(self.optimo_["x2"],2))+")",
+                fontsize=12,color="black",weight='bold')
+        ax.axvline(x=0,color="black")
+        ax.axhline(y=0,color="black")
+
+        # Set x - label
+        if xlabel is None:
+            xlabel = "output of firm 1"
+        # Set y - label
+        if ylabel is None:
+            ylabel = "output of firm 2"
+        # Set title
+        if title is None:
+            title = "Cournot - Nash Duopoly Equilibrium"
+
+        # 
+        ax.grid(visible=add_grid)
+        ax.set(xlabel=xlabel,ylabel=ylabel,title=title)
+        ax.legend()
+
+
+
+        
+
+
+    
